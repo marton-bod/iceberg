@@ -100,7 +100,7 @@ public class HiveCatalogTestWriter {
 
     metastore.hiveConf().setVar(HiveConf.ConfVars.METASTOREURIS, METASTORE_HOST);
     metastore.hiveConf().set("fs.pfile.impl", "org.apache.hadoop.fs.ProxyLocalFileSystem");
-    testTables = testTables(metastore.hiveConf(), temp);
+    testTables = testTables(metastore.hiveConf());
   }
 
   @After
@@ -129,7 +129,7 @@ public class HiveCatalogTestWriter {
     return table;
   }
 
-  public TestTables testTables(Configuration conf, TemporaryFolder temp) {
+  public TestTables testTables(Configuration conf) {
     return new TestTables.HiveTestTables(conf, temp);
   }
 
@@ -153,11 +153,13 @@ public class HiveCatalogTestWriter {
   }
 
   static class NonDeletingFolder extends TemporaryFolder {
-    public NonDeletingFolder(File root) {
+    NonDeletingFolder(File root) {
       super(root);
     }
 
     @Override
-    protected void after() { }
+    protected void after() {
+
+    }
   }
 }
