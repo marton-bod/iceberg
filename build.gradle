@@ -363,6 +363,10 @@ project(':iceberg-hive') {
 }
 
 project(':iceberg-mr') {
+  apply plugin: 'com.github.johnrengelman.shadow'
+
+  tasks.jar.dependsOn tasks.shadowJar
+
   configurations {
     testCompile {
       exclude group: 'org.apache.parquet', module: 'parquet-hadoop-bundle'
@@ -409,6 +413,29 @@ project(':iceberg-mr') {
       exclude group: 'org.codehaus.jettison', module: 'jettison'
       exclude group: 'org.apache.calcite.avatica'
     }
+  }
+
+  shadowJar {
+    configurations = [project.configurations.compile]
+
+    zip64 true
+
+    // include the LICENSE and NOTICE files for the shaded Jar
+    from(projectDir) {
+      include 'LICENSE'
+      include 'NOTICE'
+    }
+
+    dependencies {
+      include(dependency('com.github.ben-manes.caffeine:caffeine:'))
+      include(dependency('org.apache.avro:avro:'))
+      include(dependency('org.apache.iceberg::'))
+      include(dependency('org.apache.parquet::'))
+    }
+    
+    relocate 'org.apache.avro', 'org.apache.iceberg.shaded.org.apache.avro'
+    relocate 'org.apache.parquet', 'org.apache.iceberg.shaded.org.apache.parquet'
+
   }
 }
 
