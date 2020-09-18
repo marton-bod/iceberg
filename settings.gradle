@@ -17,44 +17,62 @@
  * under the License.
  */
 
+gradle.ext.hive3Enabled = false
+if (System.getProperty("hive3") != null) {
+  if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+    println "*** 'hive3' flag detected - building with Hive3 / Hadoop3 ***"
+    gradle.ext.hive3Enabled = true
+  } else {
+    println "*** 'hive3' flag detected, but with JDK version other than 1.8 - skipping Hive3 / Hadoop3 build. ***"
+  }
+}
+
 rootProject.name = 'iceberg'
 include 'api'
 include 'common'
 include 'core'
 include 'data'
-include 'flink'
-include 'flink-runtime'
 include 'mr'
+include 'mr-hive2'
+include 'mr-hive3'
 include 'hive-runtime'
 include 'orc'
 include 'arrow'
 include 'parquet'
 include 'bundled-guava'
-include 'spark'
-include 'spark3'
-include 'spark3-runtime'
 include 'pig'
 include 'hive-metastore'
+if (!gradle.ext.hive3Enabled) {
+  include 'spark'
+  include 'spark3'
+  include 'spark3-runtime'
+  include 'flink'
+  include 'flink-runtime'
+}
 
 project(':api').name = 'iceberg-api'
 project(':common').name = 'iceberg-common'
 project(':core').name = 'iceberg-core'
 project(':data').name = 'iceberg-data'
-project(':flink').name = 'iceberg-flink'
-project(':flink-runtime').name = 'iceberg-flink-runtime'
 project(':mr').name = 'iceberg-mr'
+project(':mr-hive2').name = 'iceberg-mr-hive2'
+project(':mr-hive3').name = 'iceberg-mr-hive3'
 project(':hive-runtime').name = 'iceberg-hive-runtime'
 project(':orc').name = 'iceberg-orc'
 project(':arrow').name = 'iceberg-arrow'
 project(':parquet').name = 'iceberg-parquet'
 project(':bundled-guava').name = 'iceberg-bundled-guava'
-project(':spark').name = 'iceberg-spark'
-project(':spark3').name = 'iceberg-spark3'
-project(':spark3-runtime').name = 'iceberg-spark3-runtime'
 project(':pig').name = 'iceberg-pig'
 project(':hive-metastore').name = 'iceberg-hive-metastore'
+if (!gradle.ext.hive3Enabled) {
+  project(':spark').name = 'iceberg-spark'
+  project(':spark3').name = 'iceberg-spark3'
+  project(':spark3-runtime').name = 'iceberg-spark3-runtime'
+  project(':flink').name = 'iceberg-flink'
+  project(':flink-runtime').name = 'iceberg-flink-runtime'
+}
 
-if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+if (JavaVersion.current() == JavaVersion.VERSION_1_8 && !gradle.ext.hive3Enabled) {
   include 'spark2'
   include 'spark-runtime'
 
