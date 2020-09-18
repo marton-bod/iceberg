@@ -48,9 +48,7 @@ if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
   throw new GradleException("This build must be run with JDK 8 or 11")
 }
 
-boolean hive3ModeEnabled;
-if (System.getProperty("hive3") != null) {
-  hive3ModeEnabled = true
+if (gradle.ext.hive3Enabled) {
   dependencyRecommendations {
     propertiesFile file: file('versions-hive3.props')
   }
@@ -240,7 +238,7 @@ project(':iceberg-data') {
   }
 }
 
-if (!hive3ModeEnabled) {
+if (!gradle.ext.hive3Enabled) {
   project(':iceberg-flink') {
     dependencies {
       compile project(':iceberg-api')
@@ -386,7 +384,7 @@ project(':iceberg-mr') {
     compile project(':iceberg-hive-metastore')
     compile project(':iceberg-orc')
     compile project(':iceberg-parquet')
-    if (hive3ModeEnabled) {
+    if (gradle.ext.hive3Enabled) {
       compile project(':iceberg-mr-hive3')
     } else {
       compile project(':iceberg-mr-hive2')
@@ -427,20 +425,19 @@ project(':iceberg-mr') {
     }
   }
 }
-if (!hive3ModeEnabled) {
-  project(':iceberg-mr-hive2') {
-    dependencies {
-      compile project(':iceberg-core')
-      compileOnly("org.apache.hive:hive-serde")
-    }
-  }
-}
 
-if (hive3ModeEnabled) {
+if (gradle.ext.hive3Enabled) {
   project(':iceberg-mr-hive3') {
     dependencies {
       compile project(':iceberg-core')
       compileOnly("org.apache.hive:hive-serde:3.1.2")
+    }
+  }
+} else {
+  project(':iceberg-mr-hive2') {
+    dependencies {
+      compile project(':iceberg-core')
+      compileOnly("org.apache.hive:hive-serde")
     }
   }
 }
@@ -560,7 +557,7 @@ project(':iceberg-arrow') {
     }
   }
 }
-if (!hive3ModeEnabled) {
+if (!gradle.ext.hive3Enabled) {
   project(':iceberg-spark') {
     configurations.all {
       resolutionStrategy {

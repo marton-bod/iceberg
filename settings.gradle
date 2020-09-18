@@ -17,10 +17,14 @@
  * under the License.
  */
 
-boolean hive3ModeEnabled;
+gradle.ext.hive3Enabled = false
 if (System.getProperty("hive3") != null) {
-  println "*** 'hive3' flag detected - building with Hive3 / Hadoop3 ***"
-  hive3ModeEnabled = true
+  if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+    println "*** 'hive3' flag detected - building with Hive3 / Hadoop3 ***"
+    gradle.ext.hive3Enabled = true
+  } else {
+    println "*** 'hive3' flag detected, but with JDK version other than 1.8 - skipping Hive3 / Hadoop3 build. ***"
+  }
 }
 
 rootProject.name = 'iceberg'
@@ -36,7 +40,7 @@ include 'parquet'
 include 'bundled-guava'
 include 'pig'
 include 'hive-metastore'
-if (hive3ModeEnabled) {
+if (gradle.ext.hive3Enabled) {
   include 'mr-hive3'
 } else {
   include 'mr-hive2'
@@ -58,7 +62,7 @@ project(':parquet').name = 'iceberg-parquet'
 project(':bundled-guava').name = 'iceberg-bundled-guava'
 project(':pig').name = 'iceberg-pig'
 project(':hive-metastore').name = 'iceberg-hive-metastore'
-if (hive3ModeEnabled) {
+if (gradle.ext.hive3Enabled) {
   project(':mr-hive3').name = 'iceberg-mr-hive3'
 } else {
   project(':mr-hive2').name = 'iceberg-mr-hive2'
@@ -68,7 +72,7 @@ if (hive3ModeEnabled) {
   project(':flink').name = 'iceberg-flink'
 }
 
-if (JavaVersion.current() == JavaVersion.VERSION_1_8 && !hive3ModeEnabled) {
+if (JavaVersion.current() == JavaVersion.VERSION_1_8 && !gradle.ext.hive3Enabled) {
   include 'spark2'
   include 'spark-runtime'
 
