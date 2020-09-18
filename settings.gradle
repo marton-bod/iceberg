@@ -17,42 +17,58 @@
  * under the License.
  */
 
+boolean hive3ModeEnabled;
+if (System.getProperty("hive3") != null) {
+  println "*** 'hive3' flag detected - building with Hive3 / Hadoop3 ***"
+  hive3ModeEnabled = true
+}
+
 rootProject.name = 'iceberg'
 include 'api'
 include 'common'
 include 'core'
 include 'data'
-include 'flink'
 include 'mr'
 include 'hive-runtime'
 include 'orc'
 include 'arrow'
 include 'parquet'
 include 'bundled-guava'
-include 'spark'
-include 'spark3'
-include 'spark3-runtime'
 include 'pig'
 include 'hive-metastore'
+if (hive3ModeEnabled) {
+  include 'mr-hive3'
+} else {
+  include 'mr-hive2'
+  include 'spark'
+  include 'spark3'
+  include 'spark3-runtime'
+  include 'flink'
+}
 
 project(':api').name = 'iceberg-api'
 project(':common').name = 'iceberg-common'
 project(':core').name = 'iceberg-core'
 project(':data').name = 'iceberg-data'
-project(':flink').name = 'iceberg-flink'
 project(':mr').name = 'iceberg-mr'
 project(':hive-runtime').name = 'iceberg-hive-runtime'
 project(':orc').name = 'iceberg-orc'
 project(':arrow').name = 'iceberg-arrow'
 project(':parquet').name = 'iceberg-parquet'
 project(':bundled-guava').name = 'iceberg-bundled-guava'
-project(':spark').name = 'iceberg-spark'
-project(':spark3').name = 'iceberg-spark3'
-project(':spark3-runtime').name = 'iceberg-spark3-runtime'
 project(':pig').name = 'iceberg-pig'
 project(':hive-metastore').name = 'iceberg-hive-metastore'
+if (hive3ModeEnabled) {
+  project(':mr-hive3').name = 'iceberg-mr-hive3'
+} else {
+  project(':mr-hive2').name = 'iceberg-mr-hive2'
+  project(':spark').name = 'iceberg-spark'
+  project(':spark3').name = 'iceberg-spark3'
+  project(':spark3-runtime').name = 'iceberg-spark3-runtime'
+  project(':flink').name = 'iceberg-flink'
+}
 
-if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+if (JavaVersion.current() == JavaVersion.VERSION_1_8 && !hive3ModeEnabled) {
   include 'spark2'
   include 'spark-runtime'
 
