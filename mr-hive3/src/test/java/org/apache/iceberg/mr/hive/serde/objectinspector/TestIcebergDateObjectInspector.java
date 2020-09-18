@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.iceberg.mr.hive.serde;
+package org.apache.iceberg.mr.hive.serde.objectinspector;
 
 import java.time.LocalDate;
 import org.apache.hadoop.hive.common.type.Date;

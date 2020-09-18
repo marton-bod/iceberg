@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.iceberg.mr.hive.serde;
+package org.apache.iceberg.mr.hive.serde.objectinspector;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
