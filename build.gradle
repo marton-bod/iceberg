@@ -479,18 +479,19 @@ project(':iceberg-mr') {
     }
   }
 }
-
-project(':iceberg-mr-hive2') {
-  dependencies {
-    compile project(':iceberg-core')
-    compileOnly("org.apache.hive:hive-serde")
+if (!gradle.ext.hive3Enabled) {
+  project(':iceberg-mr-hive2') {
+    dependencies {
+      compile project(':iceberg-core')
+      compileOnly("org.apache.hive:hive-serde")
+    }
   }
-}
-
-project(':iceberg-mr-hive3') {
-  dependencies {
-    compile project(':iceberg-core')
-    compileOnly("org.apache.hive:hive-serde:3.1.2")
+} else {
+  project(':iceberg-mr-hive3') {
+    dependencies {
+      compile project(':iceberg-core')
+      compileOnly("org.apache.hive:hive-serde:3.1.2")
+    }
   }
 }
 
