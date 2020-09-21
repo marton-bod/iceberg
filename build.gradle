@@ -490,7 +490,7 @@ if (!gradle.ext.hive3Enabled) {
   project(':iceberg-mr-hive3') {
     dependencies {
       compile project(':iceberg-core')
-      compileOnly("org.apache.hive:hive-serde:3.1.2")
+      compileOnly("org.apache.hive:hive-serde")
     }
   }
 }
