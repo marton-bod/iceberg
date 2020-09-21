@@ -40,13 +40,15 @@ include 'parquet'
 include 'bundled-guava'
 include 'pig'
 include 'hive-metastore'
+include 'spark3'
+include 'spark3-runtime'
+include 'spark'
+
 if (gradle.ext.hive3Enabled) {
   include 'mr-hive3'
 } else {
   include 'mr-hive2'
-  include 'spark'
-  include 'spark3'
-  include 'spark3-runtime'
+
   include 'flink'
   include 'flink-runtime'
 }
@@ -63,13 +65,15 @@ project(':parquet').name = 'iceberg-parquet'
 project(':bundled-guava').name = 'iceberg-bundled-guava'
 project(':pig').name = 'iceberg-pig'
 project(':hive-metastore').name = 'iceberg-hive-metastore'
+project(':spark3').name = 'iceberg-spark3'
+project(':spark3-runtime').name = 'iceberg-spark3-runtime'
+project(':spark').name = 'iceberg-spark'
+
 if (gradle.ext.hive3Enabled) {
   project(':mr-hive3').name = 'iceberg-mr-hive3'
 } else {
   project(':mr-hive2').name = 'iceberg-mr-hive2'
-  project(':spark').name = 'iceberg-spark'
-  project(':spark3').name = 'iceberg-spark3'
-  project(':spark3-runtime').name = 'iceberg-spark3-runtime'
+
   project(':flink').name = 'iceberg-flink'
   project(':flink-runtime').name = 'iceberg-flink-runtime'
 }

@@ -611,7 +611,6 @@ project(':iceberg-arrow') {
   }
 }
 
-if (!gradle.ext.hive3Enabled) {
   project(':iceberg-spark') {
     configurations.all {
       resolutionStrategy {
@@ -663,6 +662,7 @@ if (!gradle.ext.hive3Enabled) {
     }
   }
 
+if (!gradle.ext.hive3Enabled) {
   if (jdkVersion == '8') {
     apply from: 'jmh.gradle'
 
@@ -783,6 +783,7 @@ if (!gradle.ext.hive3Enabled) {
       }
     }
   }
+}
 
   project(':iceberg-spark3') {
     dependencies {
@@ -889,7 +890,6 @@ if (!gradle.ext.hive3Enabled) {
       enabled = false
     }
   }
-}
 
 project(':iceberg-pig') {
   dependencies {
